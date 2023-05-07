@@ -17,8 +17,8 @@ class ElementSelector {
 
     this.toggled = true;
 
-    return new Promise((resolve, reject) => {
-      document.addEventListener("click", (e) => {
+    return new Promise((resolve) => {
+      document.addEventListener("click", () => {
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.canvas.classList.remove("enabled");
         this.toggled = false;
@@ -157,24 +157,26 @@ class ElementSelector {
       { passive: true }
     );
 
-    document.addEventListener("scroll", (e) => {
+    document.addEventListener("scroll", () => {
       if (this.toggled) {
         this.detectElement();
       }
     });
 
-    document.addEventListener("mouseout", (e) => {
+    document.addEventListener("mouseout", () => {
       this.canvas.classList.remove("enabled");
     });
 
-    document.addEventListener("mouseover", (e) => {
+    document.addEventListener("mouseover", () => {
       this.canvas.classList.add("enabled");
     });
 
-    window.addEventListener("resize", (e) => {
+    window.addEventListener("resize", () => {
       this.updateCanvas();
     });
   }
 
   static isElemAnimated = (elem) => elem.getAnimations().length > 0;
 }
+
+export default ElementSelector;
