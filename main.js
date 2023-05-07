@@ -1,13 +1,13 @@
 class ElementSelector {
-  canvas;
+  styles = ElementSelector.#constructStyles();
+  canvas = ElementSelector.#constructCanvas();
+
   targetElem;
   interval;
   toggled;
 
   constructor() {
-    this.initListeners();
-    this.constructStyles();
-    this.canvas = this.constructCanvas();
+    this.#initListeners();
   }
 
   async togglePrompt() {
@@ -27,25 +27,33 @@ class ElementSelector {
     });
   }
 
-  detectElement() {
+  destroy() {
+    this.styles.remove();
+    this.canvas.remove();
+
+    clearInterval(this.interval);
+    this.toggled = false;
+  }
+
+  #detectElement() {
     const elem = document.elementsFromPoint(this.cursor.x, this.cursor.y)[1];
 
     if (!elem) {
       return;
     }
 
-    this.changeTargetElem(elem);
-    this.drawSelectionBox(elem);
+    this.#changeTargetElem(elem);
+    this.#drawSelectionBox(elem);
   }
 
-  changeTargetElem(elem) {
+  #changeTargetElem(elem) {
     if (this.targetElem === elem) {
       return;
     }
 
-    if (ElementSelector.isElemAnimated(elem) && !this.interval) {
+    if (ElementSelector.#isElemAnimated(elem) && !this.interval) {
       // TODO: Make dynamic screen Hz rendering
-      this.interval = setInterval(() => this.drawSelectionBox(elem), 16);
+      this.interval = setInterval(() => this.#drawSelectionBox(elem), 16);
     } else {
       clearInterval(this.interval);
       this.interval = null;
@@ -54,7 +62,7 @@ class ElementSelector {
     this.targetElem = elem;
   }
 
-  drawSelectionBox(elem) {
+  #drawSelectionBox(elem) {
     const ctx = this.canvas.getContext("2d");
 
     const elemCoords = elem.getBoundingClientRect();
@@ -99,9 +107,47 @@ class ElementSelector {
     ctx.stroke();
   }
 
-  constructStyles() {
+  #updateCanvas() {
+    const canvas = this.canvas;
+
+    canvas.setAttribute("width", canvas.clientWidth.toString());
+    canvas.setAttribute("height", canvas.clientHeight.toString());
+  }
+
+  #initListeners() {
+    document.addEventListener(
+      "mousemove",
+      (e) => {
+        this.cursor = { x: e.clientX, y: e.clientY };
+
+        if (this.toggled) {
+          this.#detectElement();
+        }
+      },
+      { passive: true }
+    );
+
+    document.addEventListener("scroll", () => {
+      if (this.toggled) {
+        this.#detectElement();
+      }
+    });
+
+    document.addEventListener("mouseout", () => {
+      this.canvas.classList.remove("enabled");
+    });
+
+    document.addEventListener("mouseover", () => {
+      this.canvas.classList.add("enabled");
+    });
+
+    window.addEventListener("resize", () => {
+      this.#updateCanvas();
+    });
+  }
+
+  static #constructStyles() {
     const style = document.createElement("style");
-    style.type = "text/css";
     style.innerHTML = `
           #element-selector {
             display: none;
@@ -118,9 +164,11 @@ class ElementSelector {
           }
         `;
     document.getElementsByTagName("head")[0].appendChild(style);
+
+    return style;
   }
 
-  constructCanvas() {
+  static #constructCanvas() {
     const canvas = document.createElement("canvas");
     canvas.setAttribute("id", "element-selector");
 
@@ -137,46 +185,7 @@ class ElementSelector {
     return canvas;
   }
 
-  updateCanvas() {
-    const canvas = document.querySelector("#element-selector");
-
-    canvas.setAttribute("width", canvas.clientWidth.toString());
-    canvas.setAttribute("height", canvas.clientHeight.toString());
-  }
-
-  initListeners() {
-    document.addEventListener(
-      "mousemove",
-      (e) => {
-        this.cursor = { x: e.clientX, y: e.clientY };
-
-        if (this.toggled) {
-          this.detectElement();
-        }
-      },
-      { passive: true }
-    );
-
-    document.addEventListener("scroll", () => {
-      if (this.toggled) {
-        this.detectElement();
-      }
-    });
-
-    document.addEventListener("mouseout", () => {
-      this.canvas.classList.remove("enabled");
-    });
-
-    document.addEventListener("mouseover", () => {
-      this.canvas.classList.add("enabled");
-    });
-
-    window.addEventListener("resize", () => {
-      this.updateCanvas();
-    });
-  }
-
-  static isElemAnimated = (elem) => elem.getAnimations().length > 0;
+  static #isElemAnimated = (elem) => elem.getAnimations().length > 0;
 }
 
 export default ElementSelector;
