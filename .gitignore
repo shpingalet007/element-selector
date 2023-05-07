@@ -1,0 +1,6 @@
+# NPM files and folders
+/node_modules
+# IDE files and folders
+/.idea
+# MacOS specific files and folders
+.DS_Store

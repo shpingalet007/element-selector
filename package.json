@@ -1,0 +1,24 @@
+{
+  "name": "element-selector",
+  "version": "0.0.1",
+  "description": "Module that allow selecting elements on page",
+  "main": "main.js",
+  "scripts": {
+    "lint": "eslint .",
+    "prettify": "npx prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shpingalet007/element-selector.git"
+  },
+  "author": "shpingalet007",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/shpingalet007/element-selector/issues"
+  },
+  "homepage": "https://github.com/shpingalet007/element-selector#readme",
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "prettier": "^2.8.8"
+  }
+}
