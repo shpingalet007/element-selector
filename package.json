@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "lint": "eslint .",
-    "prettify": "npx prettier --write ."
+    "prettify": "npx prettier --write .",
+    "build:prod": "rm -rf dist && webpack --env production",
+    "build:debug": "rm -rf dist && webpack --env development"
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,14 @@
   },
   "homepage": "https://github.com/shpingalet007/element-selector#readme",
   "devDependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.21.5",
+    "@webpack-cli/generators": "^3.0.3",
+    "babel-loader": "^9.1.2",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "eslint": "^8.40.0",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^5.1.0"
   }
 }
