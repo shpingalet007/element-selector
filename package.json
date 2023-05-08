@@ -1,6 +1,6 @@
 {
   "name": "element-selector",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "Module that allow selecting elements on page",
   "main": "src/main.js",

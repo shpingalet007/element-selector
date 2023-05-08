@@ -7,6 +7,7 @@ const config = {
     library: {
       type: "window",
       name: "ElementSelector",
+      export: "default",
     },
   },
   plugins: [],

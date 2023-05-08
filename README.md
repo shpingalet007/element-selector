@@ -21,7 +21,7 @@ npm i element-selector
 ### Use it with CDN
 
 ```
-<script src="//cdn.jsdelivr.net/npm/element-selector@0.1.5/dist/main.js"></script>
+<script src="//cdn.jsdelivr.net/npm/element-selector@0.1.6/dist/main.js"></script>
 ```
 
 ## How to use
@@ -36,7 +36,7 @@ let elementSelector = new ElementSelector();
  * - use async/await
  * - use then callback
  */
-let selectedElement = await elementSelector.prompt();
+let selectedElement = await elementSelector.togglePrompt();
 
 /**
  * After you don't need it you can
