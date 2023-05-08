@@ -21,18 +21,14 @@ npm i element-selector
 ### Use it with CDN
 
 ```
-<script src="https://cdn.jsdelivr.net/npm/element-selector@0.1.3/dist/main.js"></script>
-<script>
-  let elementSelector = new ElementSelector();
-  let selectedElement = await elementSelector.prompt();
-</script>
+<script src="//cdn.jsdelivr.net/npm/element-selector@0.1.3/dist/main.js"></script>
 ```
 
 ## How to use
 
 There are only 2 public methods
 
-```
+```js
 let elementSelector = new ElementSelector();
 
 /**
@@ -40,12 +36,11 @@ let elementSelector = new ElementSelector();
  * - use async/await
  * - use then callback
  */
-
 let selectedElement = await elementSelector.prompt();
 
 /**
  * After you don't need it you can
  * destroy canvas and styles objects
  */
- elementSelector.destroy();
+elementSelector.destroy();
 ```
