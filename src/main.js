@@ -18,7 +18,7 @@ class ElementSelector {
     this.toggled = true;
 
     return new Promise((resolve) => {
-      document.addEventListener("click", () => {
+      document.addEventListener("mousedown", () => {
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.canvas.classList.remove("enabled");
         this.toggled = false;
@@ -134,11 +134,15 @@ class ElementSelector {
     });
 
     document.addEventListener("mouseout", () => {
-      this.canvas.classList.remove("enabled");
+      if (this.toggled) {
+        this.canvas.classList.remove("enabled");
+      }
     });
 
     document.addEventListener("mouseover", () => {
-      this.canvas.classList.add("enabled");
+      if (this.toggled) {
+        this.canvas.classList.add("enabled");
+      }
     });
 
     window.addEventListener("resize", () => {
