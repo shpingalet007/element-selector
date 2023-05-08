@@ -6,3 +6,4 @@
 .DS_Store
 # Project temporary files
 /dist
+*.tgz

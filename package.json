@@ -1,13 +1,19 @@
 {
   "name": "element-selector",
-  "version": "0.1.0",
+  "version": "0.1.2",
+  "type": "module",
   "description": "Module that allow selecting elements on page",
-  "main": "main.js",
+  "main": "src/main.js",
+  "files": [
+    "dist",
+    "src/main.js"
+  ],
   "scripts": {
     "lint": "eslint .",
     "prettify": "npx prettier --write .",
     "build:prod": "rm -rf dist && webpack --env production",
-    "build:debug": "rm -rf dist && webpack --env development"
+    "build:debug": "rm -rf dist && webpack --env development",
+    "publish": "npm run lint && npm run prettify && npm run build:prod && npm publish"
   },
   "repository": {
     "type": "git",
