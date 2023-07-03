@@ -21,7 +21,7 @@ npm i element-selector
 ### Use it with CDN
 
 ```
-<script src="//cdn.jsdelivr.net/npm/element-selector@0.1.6/dist/main.js"></script>
+<script src="//cdn.jsdelivr.net/npm/element-selector@0.1.7/dist/main.js"></script>
 ```
 
 ## How to use
