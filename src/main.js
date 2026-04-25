@@ -4,7 +4,10 @@ class ElementSelector {
 
   targetElem;
   interval;
-  toggled;
+  toggled = false;
+  cursor = { x: 0, y: 0 };
+
+  #boundHandlers = {};
 
   constructor() {
     this.#initListeners();
@@ -18,16 +21,26 @@ class ElementSelector {
     this.toggled = true;
 
     return new Promise((resolve) => {
-      document.addEventListener("mousedown", () => {
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.canvas.classList.remove("enabled");
-        this.toggled = false;
-        resolve(this.targetElem);
-      });
+      document.addEventListener(
+        "mousedown",
+        () => {
+          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.canvas.classList.remove("enabled");
+          this.toggled = false;
+          resolve(this.targetElem);
+        },
+        { once: true }
+      );
     });
   }
 
   destroy() {
+    document.removeEventListener("mousemove", this.#boundHandlers.mousemove);
+    document.removeEventListener("scroll", this.#boundHandlers.scroll);
+    document.removeEventListener("mouseout", this.#boundHandlers.mouseout);
+    document.removeEventListener("mouseover", this.#boundHandlers.mouseover);
+    window.removeEventListener("resize", this.#boundHandlers.resize);
+
     this.styles.remove();
     this.canvas.remove();
 
@@ -51,15 +64,18 @@ class ElementSelector {
       return;
     }
 
+    this.targetElem = elem;
+
     if (ElementSelector.#isElemAnimated(elem) && !this.interval) {
       // TODO: Make dynamic screen Hz rendering
-      this.interval = setInterval(() => this.#drawSelectionBox(elem), 16);
+      this.interval = setInterval(
+        () => this.#drawSelectionBox(this.targetElem),
+        16
+      );
     } else {
       clearInterval(this.interval);
       this.interval = null;
     }
-
-    this.targetElem = elem;
   }
 
   #drawSelectionBox(elem) {
@@ -115,39 +131,43 @@ class ElementSelector {
   }
 
   #initListeners() {
-    document.addEventListener(
-      "mousemove",
-      (e) => {
-        this.cursor = { x: e.clientX, y: e.clientY };
+    this.#boundHandlers.mousemove = (e) => {
+      this.cursor = { x: e.clientX, y: e.clientY };
 
-        if (this.toggled) {
-          this.#detectElement();
-        }
-      },
-      { passive: true }
-    );
-
-    document.addEventListener("scroll", () => {
       if (this.toggled) {
         this.#detectElement();
       }
-    });
+    };
 
-    document.addEventListener("mouseout", () => {
+    this.#boundHandlers.scroll = () => {
+      if (this.toggled) {
+        this.#detectElement();
+      }
+    };
+
+    this.#boundHandlers.mouseout = () => {
       if (this.toggled) {
         this.canvas.classList.remove("enabled");
       }
-    });
+    };
 
-    document.addEventListener("mouseover", () => {
+    this.#boundHandlers.mouseover = () => {
       if (this.toggled) {
         this.canvas.classList.add("enabled");
       }
-    });
+    };
 
-    window.addEventListener("resize", () => {
+    this.#boundHandlers.resize = () => {
       this.#updateCanvas();
+    };
+
+    document.addEventListener("mousemove", this.#boundHandlers.mousemove, {
+      passive: true,
     });
+    document.addEventListener("scroll", this.#boundHandlers.scroll);
+    document.addEventListener("mouseout", this.#boundHandlers.mouseout);
+    document.addEventListener("mouseover", this.#boundHandlers.mouseover);
+    window.addEventListener("resize", this.#boundHandlers.resize);
   }
 
   static #constructStyles() {

@@ -11,14 +11,6 @@ const config = {
     },
   },
   plugins: [],
-  module: {
-    rules: [
-      {
-        test: /\.js$/i,
-        loader: "babel-loader",
-      },
-    ],
-  },
 };
 
 module.exports = (env) => {
